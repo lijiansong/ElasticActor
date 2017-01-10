@@ -286,15 +286,9 @@ Station* Module::create_instance() {
 }
 Actor* Module::create_instance(uint32_t inst_id) {
   // Can not create more ..
-  if (m_id_generator.load() >= get_max_instances()) {
-/*    MOLA_ERROR_TRACE("module \"" << get_name()
-                    << "\" cannot create instances more than "
-                    << get_max_instances() );*/
-    return nullptr;
-  }
   // Since the stateless worker is created in the dispatch stage,
   // the requeset here must be a instance with its state !!
-  ActorID new_id(m_id, ActorID::ANY, inst_id);
+  ActorID new_id(node_id, m_id, ActorID::ANY, inst_id);
   Actor *infant = is_strong()
                     ? new StrongActor(new_id, this)
                     : new Actor(new_id, this);
@@ -307,11 +301,6 @@ Actor* Module::create_instance(uint32_t inst_id) {
     infant->set_data_ptr(data_ptr);
   }
 
-  if (is_singleton()) {
-    MOLA_ASSERT(m_id_generator.load() == 1);
-    m_instance = infant;
-  }
-
   return infant;
 }
 
@@ -319,14 +308,15 @@ Actor* Module::select_or_create_actor_instance(uint32_t inst_id) {
   
   utils::LockGuard lock(m_lock);
   Actor *actor = nullptr;
-  if (is_singleton() || inst_id != ActorID::ANY) {
+  /*
+  if (is_singleton()) {
     // TODO: find the single instance and return ..
     if (is_singleton()) {
       if (m_instance == nullptr)
         m_instance = create_instance();
       return m_instance;
     }
-
+*/
     auto ans = m_inst_map.find(inst_id);
     if (ans != m_inst_map.end()) {
       return ans->second;
@@ -339,24 +329,6 @@ Actor* Module::select_or_create_actor_instance(uint32_t inst_id) {
       assert(actor);
       return actor;
     }
-  }
-
-#if  0
-  actor = m_idle_que.dequeue();
-  if (actor != nullptr) return actor;
-#endif
-
-  actor = create_instance(m_id_generator++);
-  if (actor != nullptr) return actor;
-
-  // cannot create new one, random select a busy one !!
-  do {
-    inst_id = AbsolateWorker::random() % get_max_instances();
-    auto ans = m_inst_map.find(inst_id+1);
-    if (ans != m_inst_map.end()) actor = ans->second;
-  } while (actor == nullptr);
-
-  return actor;
 }
 
 std::vector<Station*> Module::get_all_instances() {

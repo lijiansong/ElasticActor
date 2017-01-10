@@ -10,7 +10,7 @@
 #include "mola/message.hpp"
 #include "mola/spinlock.hpp"
 #include "mola/queue.hpp"
-
+#include "mola/node_manager.hpp"
 
 namespace mola {
 
@@ -185,6 +185,8 @@ private:
     , m_singleton(spec->type & MOLA_MODULE_TYPE_SINGLETON)
     , m_id_generator(0)
     , m_instance(nullptr) {
+    auto nmgr = NodeManager::instance();
+    node_id = nmgr->local_node()->get_id();
   }
 
   ~Module() {
@@ -201,6 +203,8 @@ private:
   
   /* Module id on current node */
   ID m_id;
+
+  uint32_t node_id;
   /* runtime module specific */
   mola_module_spec_t m_module_spec;
   /* module handler for libdl */

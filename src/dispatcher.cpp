@@ -103,7 +103,7 @@ int Dispatcher::dispatch(MessageSafePtr& message) {
 }
 
 // ------ for request message -------
-int Dispatcher::dispatch(ActorAddr& target,
+int Dispatcher::dispatch(ActorID& target,
                          MessageSafePtr& message,
                          uint32_t return_intf, void *ctx) {
   int ret = 0;
@@ -128,9 +128,9 @@ int Dispatcher::dispatch(ActorAddr& target,
     }
   }
 
-  if (target.node_id() != ActorID::ANY) {
+  //if (target.node_id() != ActorID::ANY) {
     ret = dispatch(message);
-  } else {
+  /*} else {
     auto module = Module::find_module(target.module_id());
     if (module != nullptr && module->is_private()) {
       // we prefer to use the local module instances if the module is privete!!
@@ -151,7 +151,7 @@ int Dispatcher::dispatch(ActorAddr& target,
       if (callback() != 0)
         ret = mgr->add_delay_task(callback);
     }
-  }
+  }*/
 
   if (new_reqid) {
     if (ret == 0) {
@@ -294,9 +294,12 @@ int SendMsgToIntf(MODULE_ID_T mid, INTF_ID_T intf, INST_ID_T inst,
   
   // get address of the actor
   ActorAddr* target = mola::NameService::get_actor_addr(mid, inst);
-
+  uint32_t node = ActorID::LOCAL; 
+  if (target != nullptr) 
+    node = target->node_id();
+  ActorID tgt(node, mid, inst, intf);
   /* if the reqid is not zero, we just do an asynchronized return */
-  auto reqid = GET_REQ_ID(inst);
+  /*auto reqid = GET_REQ_ID(inst);
   if (reqid != 0) {
     rt_msg->set_reqid(reqid);
     rt_msg->set_response();
@@ -309,9 +312,9 @@ int SendMsgToIntf(MODULE_ID_T mid, INTF_ID_T intf, INST_ID_T inst,
     rt_msg->set_sender(current->get_id());
 
     return mola::Dispatcher::dispatch(rt_msg);
-  }
+  }*/
 
-  return mola::Dispatcher::dispatch(target, rt_msg, ret_intf, ctx);
+  return mola::Dispatcher::dispatch(tgt, rt_msg, ret_intf, ctx);
  
 }
 
