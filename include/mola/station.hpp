@@ -52,7 +52,7 @@ public:
   typedef std::pair<ExecStatus, int> ExitStatus;
 
   /* get the current actor, by scheduler-context only */
-  template <class T = Actor>
+  template <class T = Station>
   static T* current() {
     auto worker = AbsolateWorker::get_worker();
     if (worker == nullptr) 
@@ -74,9 +74,9 @@ public:
     
     try {
       /* call the actor 's init callback for first schedule */
-      if (m_status == ACTOR_STARTUP) {
+      if (m_status == STATION_STARTUP) {
         m_module->init_instance(this);
-        m_status = ACTOR_RUNNING;
+        m_status = STATION_RUNNING;
       }
 
       auto threshold = m_module->get_threshold();
@@ -286,9 +286,9 @@ public:
  
 protected:
   enum State {
-    ACTOR_STARTUP = 0,
-    ACTOR_RUNNING = 1,
-    ACTOR_SUSPEND = 2,
+    STATION_STARTUP = 0,
+    STATION_RUNNING = 1,
+    STATION_SUSPEND = 2,
     // TODO ..
   };
   

@@ -276,6 +276,7 @@ public:
   }
 
  void operator = (MessageSafePtr&& rhs) {
+  node_id = id 
     drop();
     m_wrapper = rhs.pass();
   }

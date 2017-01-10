@@ -233,7 +233,30 @@ int Module::invoke_message(Actor *actor,
   return MODULE_OK;
 }
 
-Actor* Module::create_instance() {
+ActorAddr* Module::search_location_cache(ActorID id) {
+  auto loc = m_location_cache.find(id);	
+  if (loc == m_location_cache.end())
+    return nullptr;
+  return loc.second;
+}
+
+ActorAddr* Module::search_location(ActorID id) {
+  auto loc = m_location.find(id);
+  if (loc == m_location.end())
+    return nullptr;
+  insert_location_cache(id, &(loc.second));
+  return &(loc.second);
+}
+
+void insert_location_cache(ActorID id, ActorAddr* addr) {
+  m_location_cache.emplcae(id, addr);
+  // replacement alg
+  if (m_location_cache.size() > location_cache_size) { 
+   //TODO 
+  }
+}
+
+Station* Module::create_instance() {
   // Can not create more ..
   if (m_id_generator.load() >= get_max_instances()) {
 /*    MOLA_ERROR_TRACE("module \"" << get_name()
@@ -243,16 +266,14 @@ Actor* Module::create_instance() {
   }
   // Since the stateless worker is created in the dispatch stage,
   // the requeset here must be a instance with its state !!
-  ActorID new_id(m_id, ActorID::ANY, m_id_generator++);
-  Actor *infant = is_strong()
-                    ? new StrongActor(new_id, this)
-                    : new Actor(new_id, this);
+  StationID new_id(m_id, StationID::ANY, m_id_generator++);
+  Station *infant = new Station(new_id, this);
 
   m_inst_map.emplace(new_id.instance_id(), infant);
   
   // Allocate the private data for this actor
   if (get_data_size() > 0) {
-    void* data_ptr = ::calloc(sizeof(char) * get_data_size(), 1);
+    void* data_ptr = ::calloc(default_actor_num, sizeof(char) * get_data_size());
     infant->set_data_ptr(data_ptr);
   }
 
@@ -294,12 +315,12 @@ Actor* Module::create_instance(uint32_t inst_id) {
   return infant;
 }
 
-Actor* Module::select_or_create_instance(uint32_t inst_id) {
+Actor* Module::select_or_create_actor_instance(uint32_t inst_id) {
   
   utils::LockGuard lock(m_lock);
   Actor *actor = nullptr;
   if (is_singleton() || inst_id != ActorID::ANY) {
-    // find the single instance and return ..
+    // TODO: find the single instance and return ..
     if (is_singleton()) {
       if (m_instance == nullptr)
         m_instance = create_instance();
@@ -338,13 +359,13 @@ Actor* Module::select_or_create_instance(uint32_t inst_id) {
   return actor;
 }
 
-std::vector<Actor*> Module::get_all_instances() {
+std::vector<Station*> Module::get_all_instances() {
   utils::LockGuard lock(m_lock);
   
   // FIXME : create all instances if the module is not auto-started.
   while (create_instance() != nullptr);
 
-  std::vector<Actor*> instances;
+  std::vector<Station*> instances;
   for (auto itr = m_inst_map.begin(), end = m_inst_map.end();
        itr != end; ++itr) {
     instances.emplace_back(itr->second);

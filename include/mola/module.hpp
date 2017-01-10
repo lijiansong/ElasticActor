@@ -56,6 +56,9 @@ public:
     return nullptr;
   }
 
+  ActorAddr* search_location_cache(ActorID id);
+  ActorAddr* search_location(ActorID id);
+  void insert_location_cache(ActorID id, ActorAddr* addr);
   // ------------------------------------------------------- //
 
   /* Belowing two functions are called by Dispatcher when
@@ -149,7 +152,7 @@ public:
     return m_module_spec->fini;
   }
 
-  bool become_idle(Actor *actor) {
+  bool become_idle(Station *actor) {
     // TODO : If there are too many idle instances, 
     //        donot enqueue and just return false.
     // m_idle_que.enqueue(actor);
@@ -161,11 +164,11 @@ public:
     m_threshold = threshold;
   }
   
-  void init_instance(Actor*) const throw();
+  void init_instance(Station*) const throw();
 
 protected:
   // Fetch all avaliable instances, may only be used by network APIs
-  std::vector<Actor*> get_all_instances();
+  std::vector<Station*> get_all_instances();
 
 private:
   /* The Module can only be created on dynamic loading 
@@ -188,13 +191,13 @@ private:
     unload_module(this);
   }
 
-  Actor* create_instance();
-  Actor* create_instance(uint32_t);
+  Station* create_instance();
+  Station* create_instance(uint32_t);
 
   /* select an instance to handle the incoming messages,
    * if there're no thus one or all active ones are busy,
    * try to create a new one to handle this message. */ 
-  Actor* select_or_create_instance(uint32_t inst_id);
+  Actor* select_or_create_actor_instance(uint32_t inst_id);
   
   /* Module id on current node */
   ID m_id;
@@ -204,19 +207,23 @@ private:
   mola_module_handle_t m_module_hd;
   /* max number of messages to process when instance is running */
   uint32_t m_threshold;
-   
+  size_t default_actor_num = 1024;
+
   /* configuable params */
   bool m_private:1;
   bool m_autostart:1;
   bool m_singleton:1;
 
   std::atomic<uint32_t> m_id_generator;
-  std::map<uint32_t, Actor*> m_inst_map;
+  std::map<uint32_t, Station*> m_inst_map;
+  int location_cache_size = 1024;
+  std::map<ActorID, ActorAddr*> m_location_cache;
+  std::map<ActorID, ActorAddr> m_location;
 
-  Actor* m_instance;
+  Station* m_instance;
 
   mutable utils::SpinLock m_lock;
-  utils::ThreadSafeQueue<Actor> m_idle_que;
+  utils::ThreadSafeQueue<Station> m_idle_que;
 };
 
 }

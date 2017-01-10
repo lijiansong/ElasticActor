@@ -103,7 +103,7 @@ int Dispatcher::dispatch(MessageSafePtr& message) {
 }
 
 // ------ for request message -------
-int Dispatcher::dispatch(ActorID& target,
+int Dispatcher::dispatch(ActorAddr& target,
                          MessageSafePtr& message,
                          uint32_t return_intf, void *ctx) {
   int ret = 0;
@@ -291,7 +291,9 @@ int SendMsgToIntf(MODULE_ID_T mid, INTF_ID_T intf, INST_ID_T inst,
                   void* msg, INTF_ID_T ret_intf, void* ctx) {
 
   MessageSafePtr rt_msg( GEN_MESSAGE(msg) );
-  ActorID target(GET_NODE_ID(inst), mid, intf, GET_INST_ID(inst));
+  
+  // get address of the actor
+  ActorAddr* target = mola::NameService::get_actor_addr(mid, inst);
 
   /* if the reqid is not zero, we just do an asynchronized return */
   auto reqid = GET_REQ_ID(inst);

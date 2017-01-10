@@ -78,7 +78,7 @@ public:
 
   static int dispatch(MessageSafePtr& message); 
 
-  static int dispatch(ActorID& target,
+  static int dispatch(ActorAddr& target,
                       MessageSafePtr& message,
                       uint32_t return_intf = ActorID::ANY,
                       void *ctx = nullptr);
