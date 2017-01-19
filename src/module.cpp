@@ -266,14 +266,16 @@ Station* Module::create_instance() {
   }
   // Since the stateless worker is created in the dispatch stage,
   // the requeset here must be a instance with its state !!
-  StationID new_id(m_id, StationID::ANY, m_id_generator++);
-  Station *infant = new Station(new_id, this);
+  ActorID new_id(m_id, ActorID::ANY, m_id_generator++);
+  Actor *infant = is_strong()
+                    ? new StrongActor(new_id, this)
+		    : new Actor(new_id, this);
 
   m_inst_map.emplace(new_id.instance_id(), infant);
   
   // Allocate the private data for this actor
   if (get_data_size() > 0) {
-    void* data_ptr = ::calloc(default_actor_num, sizeof(char) * get_data_size());
+    void* data_ptr = ::calloc(sizeof(char) * get_data_size());
     infant->set_data_ptr(data_ptr);
   }
 

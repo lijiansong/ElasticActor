@@ -135,7 +135,7 @@ public:
   void set_sender(const WorkItem* sender);
 
   void set_sender(const ActorID& id) {
-    m_metadata.sender = id.u64();
+    m_metadata.sender = id;
   }
 
   void set_sender(uint32_t node_id, uint32_t module_id,
@@ -147,17 +147,17 @@ public:
   }
 
   const ActorID& get_sender() const { 
-    return *(ActorID::convert_from_u64(&(m_metadata.sender)));
+    return m_metadata.sender;
   }
   
   ActorID& get_sender() {
-    return *(ActorID::convert_from_u64(&(m_metadata.sender)));
+    return m_metadata.sender;
   }
   
   void set_target(const WorkItem* target);
 
   void set_target(const ActorID& id) { 
-    m_metadata.target = id.u64();
+    m_metadata.target = id;
   }
 
   void set_target(uint32_t node_id, uint32_t module_id,
@@ -169,11 +169,11 @@ public:
   }
 
   const ActorID& get_target() const { 
-    return *(ActorID::convert_from_u64(&(m_metadata.target)));
+    return m_metadata.target;
   }
 
   ActorID& get_target() {
-    return *(ActorID::convert_from_u64(&(m_metadata.target)));
+    return m_metadata.target;
   }
 
   mola_message_metadata_t& get_metadata() {
@@ -276,7 +276,6 @@ public:
   }
 
  void operator = (MessageSafePtr&& rhs) {
-  node_id = id 
     drop();
     m_wrapper = rhs.pass();
   }

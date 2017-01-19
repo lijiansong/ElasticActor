@@ -10,6 +10,7 @@
 
 #include <endian.h>
 
+#include "mola/actor_id.hpp"
 #include "mola/c/support.h"
 #include "mola/c/mola_refcnt.h"
 
@@ -80,8 +81,8 @@ typedef struct {
   uint16_t type;    // the type of this message
   uint16_t data_type;  // user data or stream data
   uint32_t size;    // the serialized package size
-  uint64_t sender;  // the sender's instance id
-  uint64_t target;  // the target's instance id
+  ActorID sender;  // the sender's instance id
+  ActorID target;  // the target's instance id
   uint32_t reqid;   // the request id for keeping stream context
 } mola_message_metadata_t; 
 
@@ -159,8 +160,14 @@ static void inline metatole(mola_message_metadata_t *meta) {
   meta->type = htole16(meta_.type);
   meta->data_type = htole16(meta_.data_type);
   meta->size = htole32(meta_.size);
-  meta->sender = htole64(meta_.sender);
-  meta->target = htole64(meta_.target);
+  meta->sender.dnode_id = htole32(meta_.sender.dnode_id);
+  meta->sender.dmodule_id = htole16(meta_.sender.dmodule_id);
+  meta->sender.dintf_id = htole16(meta_.sender.dintf_id);
+  meta->sender.dinst_id = htole32(meta_.sender.dinst_id);
+  meta->target.dnode_id = htole32(meta_.target.dnode_id);
+  meta->target.dmodule_id = htole16(meta_.target.dmodule_id);
+  meta->target.dintf_id = htole16(meta_.target.dintf_id);
+  meta->target.dinst_id = htole32(meta_.target.dinst_id);
   meta->reqid = htole32(meta_.reqid);
 #endif
   return;
@@ -172,8 +179,14 @@ static void inline metatobe(mola_message_metadata_t *meta) {
   meta->type = htobe16(meta_.type);
   meta->data_type = htobe16(meta_.data_type);
   meta->size = htobe32(meta_.size);
-  meta->sender = htobe64(meta_.sender);
-  meta->target = htobe64(meta_.target);
+  meta->sender.dnode_id = htobe32(meta_.sender.dnode_id);
+  meta->sender.dmodule_id = htobe16(meta_.sender.dmodule_id);
+  meta->sender.dintf_id = htobe16(meta_.sender.dintf_id);
+  meta->sender.dinst_id = htobe32(meta_.sender.dinst_id);
+  meta->target.dnode_id = htobe32(meta_.target.dnode_id);
+  meta->target.dmodule_id = htobe16(meta_.target.dmodule_id);
+  meta->target.dintf_id = htobe16(meta_.target.dintf_id);
+  meta->target.dinst_id = htobe32(meta_.target.dinst_id);
   meta->reqid = htobe32(meta_.reqid);
 #endif
   return;

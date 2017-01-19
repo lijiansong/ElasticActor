@@ -12,36 +12,44 @@ struct ActorID {
   static const uint32_t LOCAL = 0;
   static const uint32_t CLIENT = 0xffffffffUL;
   
-  uint32_t node_id;
-  uint32_t module_id:16;
-  uint32_t intf_id:16;
-  uint32_t inst_id;
+  uint32_t dnode_id;
+  uint32_t dmodule_id:16;
+  uint32_t dintf_id:16;
+  uint32_t dinst_id;
 
 
-  uint32_t module_id() const { return module_id; }
-  uint32_t instance_id() const { return inst_id; }
-  uint32_t node_id() const { return node_id; }
-  uint32_t intf_id() const { return intf_id; }
+  uint32_t module_id() const { return dmodule_id; }
+  uint32_t instance_id() const { return dinst_id; }
+  uint32_t node_id() const { return dnode_id; }
+  uint32_t intf_id() const { return dintf_id; }
 
   void set_module_id(uint32_t m_id) {
-    module_id = m_id;
+    dmodule_id = m_id;
   }
 
   void set_inst_id(uint32_t i_id) {
-    inst_id = i_id;
+    dinst_id = i_id;
+  }
+  void set_node_id(uint32_t n_id) {
+    dnode_id = n_id;
+  }
+  void set_intf_id(uint32_t if_id) {
+    dintf_id = if_id;
   }
 
   uint32_t hash_key() const {
-    return (((uint32_t)module_id) << 16) | 
-            inst_id;
+    return (((uint32_t)dmodule_id) << 16) | 
+            dinst_id;
   }
+  
+  ActorID(){}
 
-  ActorID(uint32_t nid, uint32_t mid, uint32_t iid, uint32_t ifid): node_id(nid), module_id(mid), inst_id(iid), intf_id(ifid){}
+  ActorID(uint32_t nid, uint32_t mid, uint32_t iid, uint32_t ifid): dnode_id(nid), dmodule_id(mid), dinst_id(iid), dintf_id(ifid){}
   ActorID& operator = (const ActorID& id) {
-    node_id = id.node_id;
-    inst_id = id.inst_id;
-    module_id = id.module_id;
-    intf_id = id.intf_id;
+    dnode_id = id.dnode_id;
+    dinst_id = id.dinst_id;
+    dmodule_id = id.dmodule_id;
+    dintf_id = id.dintf_id;
   }
 /*
   ActorID& operator = (const ActorID& id) {
@@ -79,10 +87,10 @@ struct ActorAddr {
 
   ActorAddr(const ActorAddr& id) 
     : station_id(id.station_id)
-    , node_id(id.inst_id)
+    , node_id(id.node_id)
     , offset(id.offset) {}
 
-  ActorAddr(uint32_t nid = 0, uint32_t sid = 0, uint32_t off) : station_id(sid), inst_id(iid), offset(off) {}
+  ActorAddr(uint32_t nid = 0, uint32_t sid = 0, uint32_t off = 0) : node_id(nid), station_id(sid), offset(off) {}
 
 
   ActorAddr& operator = (const ActorAddr& id) {
@@ -97,12 +105,12 @@ struct ActorAddr {
   }
 
   std::string to_string() const;
-  uint32_t node_id() {return node_id;}
+  uint32_t get_node_id() {return node_id;}
 #if !defined(CLIENT_CONTEXT)
   bool is_local() const;
 #endif
 
 
-}
+};
 
 #endif // _MOLA_ACTOR_ID_H_

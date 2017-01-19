@@ -5,7 +5,8 @@
 
 #include <cassert>
 #include <cstdlib>
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #define BOLD "\033[1m"
 #define RED "\033[31m"
