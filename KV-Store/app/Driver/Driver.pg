@@ -1,0 +1,17 @@
+module Driver {
+  var {
+    Proto proto;
+    Socket sockfd[1];
+    Socket client;
+/**
+    shared uint64_t g_recv_count;
+    shared uint64_t g_send_count;
+    shared uint64_t g_concurrent_mount;*/
+  }
+
+  init Driver_init();
+  exit Driver_exit();
+
+  interface OnNewPackage(Package) = 0;
+  interface OnReqReturn(Ret)      = 1;
+}

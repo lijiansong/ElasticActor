@@ -1,0 +1,32 @@
+syntax='proto2';
+
+message Buffer {
+    required bytes content    = 1;
+};
+
+message Req {
+    required Buffer buf       = 1; 
+};
+
+
+message Ret {
+    required  uint64   key      = 1;
+    required  uint64   value    = 2;
+    required  uint64   ksize    = 3;
+    required  uint64   vsize    = 4;
+};
+
+message GetReq {
+    required  uint64    key      = 1;
+    required  uint64    ksize    = 2;
+    required  uint32    hash_key = 3;
+};
+
+message SetReq {
+    required  uint64   key      = 1;
+    required  uint64   value    = 2;
+    required  uint64   ksize    = 3;
+    required  uint64   vsize    = 4;
+    required  uint32   hash_key = 5;
+};
+

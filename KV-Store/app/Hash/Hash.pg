@@ -1,0 +1,10 @@
+module Hash {
+  var {
+  }
+
+  init Hash_init();
+  exit Hash_exit();
+
+  interface OnReq(Req) return(Ret) = 0;
+  interface OnReqRet(Ret) return(Ret) = 1;
+}

@@ -1,0 +1,11 @@
+module HashTable {
+  var {
+    Vector* vec;
+  }
+
+  init HashTable_init();
+  exit HashTable_exit();
+
+  interface OnGetReq(GetReq) return(Ret) = 0;
+  interface OnSetReq(SetReq) return(Ret) = 1;
+}

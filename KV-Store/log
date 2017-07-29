@@ -1,0 +1,32 @@
+[1m[ALTER] dynload_module:src/module.cpp:41: >>> Get module "Driver" with id 1[0m
+[1m[ALTER] dynload_module:src/module.cpp:41: >>> Get module "Hash" with id 9[0m
+[1m[ALTER] dynload_module:src/module.cpp:41: >>> Get module "HashTable" with id 8[0m
+[1m[ALTER] zk_watcher:src/zookeeper.cpp:42: >>> detect a new node join to this cluster![0m
+[1m[ALTER] join:src/zookeeper.cpp:287: >>> my node id is 720 {{ 0 0 10.3.2.142 2002 1 9 8  }} [0m
+the scheduled actor is ffff00010000
+the scheduled actor is 1ffff00010000
+Module driver instance id: 2d00001
+1 nodes are:
+720 
+the scheduled actor is 2ffff00010000
+Module driver instance id: 2d00002
+1 nodes are:
+720 
+the scheduled actor is 3ffff00010000
+Module driver instance id: 2d00003
+1 nodes are:
+720 
+Module driver instance id: 2d00000
+1 nodes are:
+720 
+accept a new client on sockfd 9the scheduled actor is ffff00010000
+the scheduled actor is ffffffffffffffff
+the scheduled actor is 1ffff00010000
+Driver OnNewPackage 1.548000 ms passed.
+the scheduled actor is ffff00000000
+Module hash instance id: 2d00000
+Hash OnReq 0.130000 ms passed.
+the scheduled actor is 1ffff00010000
+Module hashtable instance id: 2d00001
+Module hashtable is initialized
+send back to hash
