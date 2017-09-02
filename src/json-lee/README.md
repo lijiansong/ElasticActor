@@ -6,3 +6,6 @@
    - remember to close of firewall of servers by `$ service iptables stop & /etc/init.d/iptables status`
    - compare-and-swap(CAS) operation, lock-free method, see [here](http://www.cnblogs.com/Mainz/p/3546347.html)
    - compile the whole project by `cmake . & make` and track the `\tools\moloader`
+
+since PPoPP2018 is over, choose another journal,
+
