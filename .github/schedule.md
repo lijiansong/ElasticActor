@@ -8,6 +8,13 @@
 | 2017/10/20-2017/10/31 | 修改文章 |
 
 之前的安排：
+ two things:
+ - collect useful info to compute opt num of actor stations
+ - granularity adjustment of scheduler
+   - BackUp: CentOS关闭防火墙，[link](http://www.centoscn.com/CentosBug/osbug/2016/0702/7562.html)
+   - remember to close of firewall of servers by `$ service iptables stop & /etc/init.d/iptables status`
+   - compare-and-swap(CAS) operation, lock-free method, see [here](http://www.cnblogs.com/Mainz/p/3546347.html)
+   - compile the whole project by `cmake . & make` and track the `\tools\moloader`
 - [x] ToDo: 实现ElasticActor的论文实验，使之支持
   - dispatcher.c: 位置无关的移动
   - actor station： scheduler的实现，使之支持actor数目的动态调节，即论文中的数学模型
