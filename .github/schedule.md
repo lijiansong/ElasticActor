@@ -38,3 +38,6 @@
 - 看懂KVStore的基本实现原理
 - 看懂mola框架的接口
 - 整个工程的调试（分布式的可能不太好调试，就用log）
+
+20180416、
+1.现在的SendMsg实际编译出来的代码(xxx_out.c)是发给AnyInst（某一类Actor的任意实例），修改runtime使之能够发给指定的ID，核心的需要修改的就是scheduler和dispatcher。先弄清楚几个核心的数据结构之间的关系。
